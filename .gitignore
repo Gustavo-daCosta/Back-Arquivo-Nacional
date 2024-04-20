@@ -1,5 +1,6 @@
 .env
 Poppler
+__pycache__
 
 # Pasta documents armazena os documentos em PDF
 # Não posso subir para o github em razão do tamanho dos arquivos

@@ -1,22 +1,61 @@
 import os
-from PIL import Image
 from pdf2image import convert_from_path
 
 # pdf2image / poppler config
-poppler_path = "../Poppler/poppler-24.02.0/Library/bin"
-title = "autuacao"
+poppler_path = "./Poppler/poppler-24.02.0/Library/bin"
+path = "../documents/"
 
-assets_folder = "../assets/"
-if (os.path.exists(assets_folder + title) == False):
-    os.mkdir(assets_folder + title)
+files_names = os.listdir(path)
 
-# até aqui funcionando
+title_extension = ""
+title = ""
+index = ""
 
-images_path = "../assets/certidao-nascimento.pdf"
-path = assets_folder + title + "/"
-images = convert_from_path(images_path, poppler_path=poppler_path)
+def select_file():
+    path = "../documents/"
+    while True:
+        # try:
+        print("SELECIONE UM ARQUIVO:")
+        i = 0
+        for file in files_names:
+            i = i + 1
+            title_extension = os.path.basename(file)
+            title = os.path.splitext(title_extension)[0] # remove extension
+            print(f" {i}  - {title}")
 
-for i in range(len(images)):
-    images[i].save(path + 'page' + str(i) + '.jpg', 'JPEG')
-print("Concluído!")
-print("Visite a pasta: " + path)
+        print("\nDigite o número corresponde ao arquivo.")
+        index = int(input("Número: "))
+        title_extension = os.path.basename(files_names[index - 1])
+        title = os.path.splitext(title_extension)[0]
+        path = path + title_extension
+        break
+        # except:
+        #     print("ERRO! Digite um número válido.")
+        #     input("Aperte ENTER para continuar...")
+        #     os.system('cls')
+
+
+    images_folder = "../images/"
+    folder_path = images_folder + title + "/"
+
+    if (not os.path.exists(folder_path)):
+        os.mkdir(folder_path)
+        print("\n * Convertendo pdf para imagens... *")
+        images = convert_from_path(path, poppler_path=poppler_path)
+
+        for i in range(len(images)):
+            file_name = folder_path + title + '-pg' + str(i + 1) + '.jpg'
+            images[i].save(file_name, 'JPEG')
+        print("Concluído!")
+        print("Visite a pasta: " + folder_path)
+
+    print(folder_path)
+
+
+select_file()
+
+# images = convert_from_path(path, poppler_path=poppler_path)
+
+# for i in range(len(images)):
+#     file_name = "../images" + title + '-pg' + str(i + 1) + '.jpg'
+#     images[i].save(file_name, 'JPEG')
